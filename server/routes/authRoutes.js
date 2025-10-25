@@ -5,6 +5,9 @@ import User from "../models/User.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+
+//Register
+
 router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password)
@@ -22,6 +25,9 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+//login
+
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -34,9 +40,15 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
+    /**We create a token that contains { id: user._id } inside it.
+       We sign this token using process.env.JWT_SECRET.
+       This signing is what makes the token trustworthy.
+       No headers are used here yet.
+       At the login step, we just generate the token and send it to the frontend. */
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+
     res.json({
       token,
       user: {
@@ -51,7 +63,13 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+/**The /verify route is used to confirm the user’s login status.
+The authMiddleware checks the token.
+If valid → backend attaches the user to req.user.
+Then we send that user info back to the frontend. */
 router.get("/verify", authMiddleware, async (req, res) => {
   res.json({ user: req.user });
 });
+
 export default router;

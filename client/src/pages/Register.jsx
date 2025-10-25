@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
+
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -17,6 +19,7 @@ export default function Register() {
     }
     setLoading(false);
   };
+
   return (
     <div className="card">
       <h2>Register</h2>
@@ -41,6 +44,7 @@ export default function Register() {
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
         />
+
         <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>
