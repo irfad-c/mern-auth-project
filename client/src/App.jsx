@@ -1,5 +1,4 @@
 //BrowserRouter allows your React app to use different pages (routes) without reloading the page.
- 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
